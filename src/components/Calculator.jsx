@@ -9,9 +9,32 @@ const Calculator = () => {
         let finalString = '';
         let str = input;
 
-        str = str.replace(/\n/g, ',');  // Accept new line
-        str = str.replace(/\\n/g, ',').split(',').map(num=>num.trim()); // Accept to \n with windows
-        finalString = str.join(',');
+        //let allowedDelimiter = `[@&#$;`;
+
+        // Check pattern //& //@ //# //$ //; end with \n
+        const regex = /^\/\/([@&#$;])\\n(.*)/;
+
+        const delimiter = str.match(regex);
+        let divider = delimiter ? delimiter[1].trim() : null;
+       
+        //console.log('divider-->',divider)
+
+        // Split login for delimiter
+        if(divider)
+        {
+            finalString = str.replace(/\\n/g, ','); 
+            finalString = finalString.replace("//"+divider, ',');
+            finalString = finalString.replace(divider, ',');
+        }
+        else
+        {
+            str = str.replace(/\n/g, ',');  // Accept new line
+            str = str.replace(/\\n/g, ',').split(',').map(num=>num.trim()); // Accept to \n with windows
+            finalString = str.join(',')
+        }
+
+        // Check any alphabet found
+        if(validateDataDisplayError("ALPHA",finalString)) return;
 
          // Convert string to numbers
          const nums = finalString.split(",").map(num => parseInt(num.trim(), 10));
@@ -22,6 +45,40 @@ const Calculator = () => {
 
         setError("");
         setResult(result);
+    }
+
+    const validateDataDisplayError = (etype,data) =>{
+        let error =0
+        let msg = '';
+        let arr,arr1;
+        switch(etype){
+            case "ALPHA":
+                arr1 = data.match(/[a-zA-Z\s]/g);
+                arr = [...new Set(arr1)];
+                if(arr && arr.length>0){
+                    msg = `Alphabet & space not allowed: ${arr.join(", ")}`;
+                    error =1;
+                    setErrorCommon(msg);
+                }
+                break;
+
+            case "NOT_ALLOW":
+                arr1 = data.match(/(-\d+|[^0-9,\s])/g);
+                arr = [...new Set(arr1)];
+                if(arr && arr.length>0)
+                {
+                    msg = `Specail chars not allowed: ${arr.join(", ")}`;
+                    error =1;
+                    setErrorCommon(msg);
+                }
+                break;
+        }
+        return error;
+    }
+
+    const setErrorCommon = (msg) =>{
+        setError(msg);
+        setResult('Error');
     }
 
     const handleChange = (e) => {
