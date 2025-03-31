@@ -39,6 +39,12 @@ const Calculator = () => {
          // Convert string to numbers
          const nums = finalString.split(",").map(num => parseInt(num.trim(), 10));
 
+         // Check for negative numbers
+        if(validateDataDisplayError("NEG",nums)) return;
+
+        // Check any special char found
+        if(validateDataDisplayError("NOT_ALLOW",finalString)) return;
+
          // Calculate and return the sum
         const validateNum =nums.filter(num=>!isNaN(num));
         const result = validateNum.reduce((acc,num)=>acc+num,0);
@@ -71,6 +77,16 @@ const Calculator = () => {
                     error =1;
                     setErrorCommon(msg);
                 }
+                break;
+            case "NEG":
+                arr1 = data.filter(n => n < 0);
+                arr = [...new Set(arr1)];
+                if(arr && arr.length>0)
+                {
+                    msg = `Negative numbers not allowed: ${arr.join(", ")}`;
+                    error =1;
+                    setErrorCommon(msg);
+                }   
                 break;
         }
         return error;
