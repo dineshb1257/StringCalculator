@@ -6,6 +6,15 @@ const Calculator = () => {
     const [error, setError] = useState("");
 
     const add = () =>{
+        let finalString = '';
+        let str = input;
+
+         // Convert string to numbers
+         const nums = str.split(",").map(num => parseInt(num.trim(), 10));
+
+         // Calculate and return the sum
+        const validateNum =nums.filter(num=>!isNaN(num));
+        const result = validateNum.reduce((acc,num)=>acc+num,0);
 
         setError("");
         setResult(result);
