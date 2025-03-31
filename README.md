@@ -17,5 +17,11 @@
 # run project 
     npm run dev
 
+# Well known configuration where code run perfectly
+# Nodejs version
+v18.20.8
+
+# NPM version
+10.8.2
 
 
