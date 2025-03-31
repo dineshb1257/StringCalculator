@@ -9,8 +9,12 @@ const Calculator = () => {
         let finalString = '';
         let str = input;
 
+        str = str.replace(/\n/g, ',');  // Accept new line
+        str = str.replace(/\\n/g, ',').split(',').map(num=>num.trim()); // Accept to \n with windows
+        finalString = str.join(',');
+
          // Convert string to numbers
-         const nums = str.split(",").map(num => parseInt(num.trim(), 10));
+         const nums = finalString.split(",").map(num => parseInt(num.trim(), 10));
 
          // Calculate and return the sum
         const validateNum =nums.filter(num=>!isNaN(num));
